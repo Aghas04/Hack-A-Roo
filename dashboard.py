@@ -1,45 +1,36 @@
 import pandas as pd
 import plotly.express as px
 import panel as pn
-
+from privateGPT import get_answer
 # Ensure Panel extensions are loaded
 pn.extension("plotly")
 
 # Function to create the expenses pie chart for a specific time period
 def make_expenses_pie_chart(df, months=None):
-    # Convert 'Date' column to datetime using error handling (invalid dates become NaT)
     df['Date'] = pd.to_datetime(df['Date'], format="%d/%m/%Y", errors='coerce')
-    
-    # Drop rows where 'Date' is NaT (invalid dates)
     df = df.dropna(subset=['Date'])
-    
-    # Get the latest date in the dataset
     latest_date = df['Date'].max()
-    #print(f"Latest date: {latest_date}")
     
-    # Filter for transactions within the specified months (if any)
     if months:
-        # Correct filter logic to use `pd.DateOffset`
         start_date = latest_date - pd.DateOffset(months=months)
         sub_df = df[df['Date'] > start_date]
     else:
         sub_df = df
     
-    # Filter for 'Debit' transactions and exclude 'Interest' and 'Salary' categories
     sub_df = sub_df[(sub_df['Type'] == 'Debit') & (~sub_df['Category'].isin(['Interest', 'Salary']))]
-    
-    # Group by 'Category' and calculate the sum of 'Debit Amount'
     category_totals = sub_df.groupby("Category")["Debit Amount"].sum().reset_index()
 
-    # Create a pie chart with custom hover template
+    if category_totals.empty:
+        return px.scatter(title="No data available for selected period")
+
     pie_fig = px.pie(
         category_totals,
         values="Debit Amount",
         names="Category",
-        title=f"Expense Breakdown by Category ({'Total' if not months else f'Last {months} Month{"s" if months > 1 else ""}'})",
-        color_discrete_sequence=px.colors.qualitative.Set2,
+        title=f"Expense Breakdown by Category ({'Total' if not months else f'Last {months} Month' + ('s' if months > 1 else '')})",
+        color_discrete_sequence=px.colors.qualitative.Set2
     )
-    # Update hover template to show category name and dollar amount
+
     pie_fig.update_traces(
         textposition='inside', 
         textinfo="percent+label",
@@ -49,15 +40,13 @@ def make_expenses_pie_chart(df, months=None):
     return pie_fig
 
 
-# Function to create the income pie chart with customized tooltips
 def make_income_pie_chart(df):
-    # Filter for 'Credit' transactions and include only 'Interest' and 'Salary' categories
     sub_df = df[(df['Type'] == 'Credit') & (df['Category'].isin(['Interest', 'Salary']))]
-
-    # Group by 'Category' and calculate the sum of 'Credit Amount'
     category_totals = sub_df.groupby("Category")["Credit Amount"].sum().reset_index()
 
-    # Create a pie chart with custom hover template
+    if category_totals.empty:
+        return px.scatter(title="No data available for income")
+
     pie_fig = px.pie(
         category_totals,
         values="Credit Amount",
@@ -65,7 +54,7 @@ def make_income_pie_chart(df):
         title="Income Breakdown by Category",
         color_discrete_sequence=px.colors.qualitative.Set1,
     )
-    # Update hover template to show category name and dollar amount
+
     pie_fig.update_traces(
         textposition='inside', 
         textinfo="percent+label",
@@ -73,6 +62,12 @@ def make_income_pie_chart(df):
     )
     
     return pie_fig
+
+# Function to interact with the LLM model
+def ask_llm(question):
+    # Replace this with actual LLM call 
+    answer = get_answer(question)
+    return "ChatBot: " + answer
 
 # Load data from CSV file
 df = pd.read_csv('Banking-Data.csv', parse_dates=['Date'])
@@ -92,13 +87,28 @@ expense_subtabs = pn.Tabs(
     ("Last 6 Months", pn.pane.Plotly(expense_pie_fig_six_months, sizing_mode="stretch_both"))
 )
 
-# Define the dashboard tabs with more detailed descriptions
+# Panel widgets for question and response
+question_input = pn.widgets.TextInput(name="Ask a Question", placeholder="Type your question here...")
+submit_button = pn.widgets.Button(name="Submit", button_type="primary")
+response_area = pn.pane.Markdown("")  # Removed 'style' argument
+
+# Define the submit action
+def on_submit(event):
+    question = question_input.value
+    response = ask_llm(question)
+    response_area.object = f"**Response:** {response}"
+
+submit_button.on_click(on_submit)
+
+# Define the dashboard tabs with detailed descriptions
 tabs = pn.Tabs(
     ("Overview", pn.Column(
         pn.pane.Markdown("### Welcome to the Personal Finance Dashboard"),
         pn.pane.Markdown("This dashboard provides an overview of your income and expense categories, "
                          "helping you track your financial activities. Use the tabs above to explore "
                          "various aspects of your financial data."),
+        pn.Row(question_input, submit_button),
+        response_area,  # Display the response here
         pn.pane.Markdown("#### Dashboard Guide:"),
         pn.pane.Markdown("1. **Income Analysis** - Explore your income sources and their breakdown.\n"
                          "2. **Expense Analysis** - Get insights into your spending habits by category.\n"
@@ -114,7 +124,7 @@ tabs = pn.Tabs(
         pn.pane.Markdown("### Expense Breakdown"),
         pn.pane.Markdown("Understand your spending patterns with this categorized view of your expenses. "
                          "This analysis can help you pinpoint areas where you may want to reduce spending."),
-        expense_subtabs  # Include the sub-tabs for different expense periods
+        expense_subtabs
     )),
     ("Trends", pn.Column(
         pn.pane.Markdown("### Financial Trends Analysis"),
@@ -137,7 +147,7 @@ template = pn.template.FastListTemplate(
         pn.pane.PNG("picture.png", sizing_mode="scale_both")
     ],
     main=[
-        pn.Row(tabs)
+        pn.Row(tabs, sizing_mode="stretch_both")
     ],
     accent_base_color="#000000",
     header_background="#000000",
