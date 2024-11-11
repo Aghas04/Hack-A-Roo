@@ -1,6 +1,7 @@
 import pandas as pd
 import plotly.express as px
 import panel as pn
+import subprocess
 from privateGPT import get_answer
 # Ensure Panel extensions are loaded
 pn.extension("plotly")
@@ -94,30 +95,12 @@ def make_income_pie_chart(df, months=None):
     
     return pie_fig
 
+# Function to interact with the LLM model
+def ask_llm(question):
+    # Replace this with actual LLM call 
+    answer = get_answer(question)
+    return answer
 
-'''
-def make_trendline(df, month=None): 
-    df["Total Amount"] = df["Debit Amount"] + df["Credit Amount"]
-    
-    # Filter by month if specified
-    if month is not None:
-        latest_date = df['Date'].max()
-        start_date = latest_date - pd.DateOffset(months=months)
-        df_filtered = df[(df["Date"] >= start_date)]
-    else: 
-        df_filtered = df
-    fig = px.line(
-        df_filtered,
-        x="Date",
-        y="Total Amount",
-        title="Monthly Spending Trend",
-        labels={"Total Amount": "Months"}
-    )
-    fig.update_traces(mode="lines+markers")  # Adds markers to each data point
-    fig.show()  # Display the figure
-    
-    return fig  # Return the figure object for further manipulation if needed
-'''
 # Load data from CSV file
 df = pd.read_csv('Banking-Data.csv', parse_dates=['Date'])
 
@@ -130,13 +113,8 @@ income_pie_fig_six_months = make_income_pie_chart(df, months=6)  # Six-month per
 expense_pie_fig_total = make_expenses_pie_chart(df)  # Total period
 expense_pie_fig_one_month = make_expenses_pie_chart(df, months=1)  # One-month period
 expense_pie_fig_three_months = make_expenses_pie_chart(df, months=3)  # Three-month period
-expense_pie_fig_six_months = make_expenses_pie_chart(df, months=6)  # Six-month period 
-'''
-trendline_total = make_trendline(df) 
-trendline_one_month = make_trendline(df, 1) 
-trendline_three_months = make_trendline(df, 3)  
-trendline_six_month = make_trendline(df, 6) 
-'''
+expense_pie_fig_six_months = make_expenses_pie_chart(df, months=6)  # Six-month period
+
 # Create the sub-tabs for the "Expense Analysis" tab
 expense_subtabs = pn.Tabs(
     ("Total", pn.pane.Plotly(expense_pie_fig_total, sizing_mode="stretch_both")),
@@ -152,14 +130,7 @@ income_subtabs = pn.Tabs(
     ("Last 3 Months", pn.pane.Plotly(income_pie_fig_three_months, sizing_mode="stretch_both")),
     ("Last 6 Months", pn.pane.Plotly(income_pie_fig_six_months, sizing_mode="stretch_both"))
 )
-'''
-trendline_subtabs = pn.Tabs(
-    ("Total", pn.pane.Plotly(trendline_total, sizing_mode="stretch_both")),
-    ("Last 1 Month", pn.pane.Plotly(trendline_one_month, sizing_mode="stretch_both")),
-    ("Last 3 Months", pn.pane.Plotly(trendline_three_months, sizing_mode="stretch_both")),
-    ("Last 6 Months", pn.pane.Plotly(trendline_six_months, sizing_mode="stretch_both"))
-)
-'''
+
 # Panel widgets for question and response
 question_input = pn.widgets.TextInput(name="Ask a Question", placeholder="Type your question here...")
 submit_button = pn.widgets.Button(name="Submit", button_type="primary")
@@ -172,6 +143,29 @@ def on_submit(event):
     response_area.object = f"**Response:** {response}"
 
 submit_button.on_click(on_submit)
+
+#load data from csv file
+def run_private_gpt():
+    try:
+        # Run privateGPT.py as a separate process
+        process = subprocess.Popen(['python', 'privateGPT.py'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+        # Print output and error in real-time
+        for line in process.stdout:
+            print(line.decode(), end='')
+
+        # Check for errors after process completes
+        stdout, stderr = process.communicate()
+        if stderr:
+            print("Error:", stderr.decode())
+
+    except Exception as e:
+        print(f"An error occurred: {e}")
+
+if __name__ == "__main__":
+    print("Starting privateGPT from dashboard...")
+    run_private_gpt()
+    
 
 # Define the dashboard tabs with detailed descriptions
 tabs = pn.Tabs(
@@ -201,7 +195,7 @@ tabs = pn.Tabs(
     )),
     ("Trends", pn.Column(
         pn.pane.Markdown("### Financial Trends Analysis"),
-        pn.pane.Markdown("The line graph displays monthly and seasonal financial trends, "
+        pn.pane.Markdown("Coming soon! This section will display monthly and seasonal financial trends, "
                          "helping you track fluctuations in income and spending.")
     ))
 )
@@ -226,5 +220,6 @@ template = pn.template.FastListTemplate(
     header_background="#000000",
 )
 
+run_private_gpt()
 # Display the dashboard
 template.show()
