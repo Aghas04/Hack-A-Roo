@@ -94,7 +94,27 @@ def make_income_pie_chart(df, months=None):
     )
     
     return pie_fig
-
+def make_trendline(df, month=None): 
+    df["Total Amount"] = df["Debit Amount"] + df["Credit Amount"]
+    
+    # Filter by month if specified
+    if month is not None:
+        latest_date = df['Date'].max()
+        start_date = latest_date - pd.DateOffset(month=month)
+        df_filtered = df[(df["Date"] >= start_date)]
+    else: 
+        df_filtered = df
+    fig = px.line(
+        df_filtered,
+        x="Date",
+        y="Total Amount",
+        title="Monthly Spending Trend",
+        labels={"Total Amount": "Months"}
+    )
+    fig.update_traces(mode="lines+markers")  # Adds markers to each data point
+    
+    
+    return fig 
 # Function to interact with the LLM model
 def ask_llm(question):
     # Replace this with actual LLM call 
@@ -115,6 +135,11 @@ expense_pie_fig_one_month = make_expenses_pie_chart(df, months=1)  # One-month p
 expense_pie_fig_three_months = make_expenses_pie_chart(df, months=3)  # Three-month period
 expense_pie_fig_six_months = make_expenses_pie_chart(df, months=6)  # Six-month period
 
+trendline_total = make_trendline(df) 
+trendline_one_month = make_trendline(df, 1) 
+trendline_three_months = make_trendline(df, 3)  
+trendline_six_months = make_trendline(df, 6) 
+
 # Create the sub-tabs for the "Expense Analysis" tab
 expense_subtabs = pn.Tabs(
     ("Total", pn.pane.Plotly(expense_pie_fig_total, sizing_mode="stretch_both")),
@@ -129,6 +154,13 @@ income_subtabs = pn.Tabs(
     ("Last 1 Month", pn.pane.Plotly(income_pie_fig_one_month, sizing_mode="stretch_both")),
     ("Last 3 Months", pn.pane.Plotly(income_pie_fig_three_months, sizing_mode="stretch_both")),
     ("Last 6 Months", pn.pane.Plotly(income_pie_fig_six_months, sizing_mode="stretch_both"))
+)
+
+trendline_subtabs = pn.Tabs(
+    ("Total", pn.pane.Plotly(trendline_total, sizing_mode="stretch_both")),
+    ("Last 1 Month", pn.pane.Plotly(trendline_one_month, sizing_mode="stretch_both")),
+    ("Last 3 Months", pn.pane.Plotly(trendline_three_months, sizing_mode="stretch_both")),
+    ("Last 6 Months", pn.pane.Plotly(trendline_six_months, sizing_mode="stretch_both"))
 )
 
 # Panel widgets for question and response
