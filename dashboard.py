@@ -94,27 +94,59 @@ def make_income_pie_chart(df, months=None):
     )
     
     return pie_fig
-def make_trendline(df, month=None): 
-    df["Total Amount"] = df["Debit Amount"] + df["Credit Amount"]
+
+# Function to create the trendline chart for monthly income and expenses
+def make_trendline_chart(df):
+    # Ensure the 'Date' column is in datetime format and clean data
+    df['Date'] = pd.to_datetime(df['Date'], format="%d/%m/%Y", errors='coerce')
+    df = df.dropna(subset=['Date'])
+
+    # Filter for the last 8 months
+    latest_date = df['Date'].max()
+    start_date = latest_date - pd.DateOffset(months=8)
+    df = df[df['Date'] >= start_date]
+
+    # Clean and prepare the data
+    df['Type'] = df['Type'].str.strip()
+    df['Category'] = df['Category'].str.strip()
     
-    # Filter by month if specified
-    if month is not None:
-        latest_date = df['Date'].max()
-        start_date = latest_date - pd.DateOffset(month=month)
-        df_filtered = df[(df["Date"] >= start_date)]
-    else: 
-        df_filtered = df
-    fig = px.line(
-        df_filtered,
-        x="Date",
-        y="Total Amount",
-        title="Monthly Spending Trend",
-        labels={"Total Amount": "Months"}
+    # Extract year and month for grouping
+    df['YearMonth'] = df['Date'].dt.to_period("M")
+
+    # Aggregate data by month for both income and expenses
+    monthly_totals = df.groupby(['YearMonth', 'Type']).agg({
+        'Debit Amount': 'sum',
+        'Credit Amount': 'sum'
+    }).reset_index()
+
+    # Pivot the data to have 'Income' and 'Expense' columns for each month
+    monthly_totals['Income'] = monthly_totals.apply(lambda x: x['Credit Amount'] if x['Type'] == 'Credit' else 0, axis=1)
+    monthly_totals['Expenses'] = monthly_totals.apply(lambda x: x['Debit Amount'] if x['Type'] == 'Debit' else 0, axis=1)
+    
+    # Sum up income and expenses by month
+    monthly_totals = monthly_totals.groupby('YearMonth').agg({'Income': 'sum', 'Expenses': 'sum'}).reset_index()
+
+    # Convert YearMonth back to a date format for plotting
+    monthly_totals['YearMonth'] = monthly_totals['YearMonth'].dt.to_timestamp()
+
+    # Create the line chart with separate lines for income and expenses
+    trendline_fig = px.line(
+        monthly_totals, 
+        x='YearMonth', 
+        y=['Income', 'Expenses'], 
+        title="Monthly Income and Expense Trends (Last 8 Months)",
+        labels={"value": "Amount ($)", "YearMonth": "Month"},
+        color_discrete_sequence=['#17BECF', '#FF7F0E']  # Color for income and expenses
     )
-    fig.update_traces(mode="lines+markers")  # Adds markers to each data point
+
+    trendline_fig.update_layout(
+        xaxis_title="Month",
+        yaxis_title="Total Amount ($)",
+        legend_title_text="Type",
+    )
     
-    
-    return fig 
+    return trendline_fig
+
 # Function to interact with the LLM model
 def ask_llm(question):
     # Replace this with actual LLM call 
@@ -135,10 +167,8 @@ expense_pie_fig_one_month = make_expenses_pie_chart(df, months=1)  # One-month p
 expense_pie_fig_three_months = make_expenses_pie_chart(df, months=3)  # Three-month period
 expense_pie_fig_six_months = make_expenses_pie_chart(df, months=6)  # Six-month period
 
-trendline_total = make_trendline(df) 
-trendline_one_month = make_trendline(df, 1) 
-trendline_three_months = make_trendline(df, 3)  
-trendline_six_months = make_trendline(df, 6) 
+# Generate the trendline figure
+trendline_fig = make_trendline_chart(df)
 
 # Create the sub-tabs for the "Expense Analysis" tab
 expense_subtabs = pn.Tabs(
@@ -156,12 +186,6 @@ income_subtabs = pn.Tabs(
     ("Last 6 Months", pn.pane.Plotly(income_pie_fig_six_months, sizing_mode="stretch_both"))
 )
 
-trendline_subtabs = pn.Tabs(
-    ("Total", pn.pane.Plotly(trendline_total, sizing_mode="stretch_both")),
-    ("Last 1 Month", pn.pane.Plotly(trendline_one_month, sizing_mode="stretch_both")),
-    ("Last 3 Months", pn.pane.Plotly(trendline_three_months, sizing_mode="stretch_both")),
-    ("Last 6 Months", pn.pane.Plotly(trendline_six_months, sizing_mode="stretch_both"))
-)
 
 # Panel widgets for question and response
 question_input = pn.widgets.TextInput(name="Ask a Question", placeholder="Type your question here...")
@@ -227,8 +251,8 @@ tabs = pn.Tabs(
     )),
     ("Trends", pn.Column(
         pn.pane.Markdown("### Financial Trends Analysis"),
-        pn.pane.Markdown("Coming soon! This section will display monthly and seasonal financial trends, "
-                         "helping you track fluctuations in income and spending.")
+        pn.pane.Markdown("This section displays Income and expense TrendLine"),
+        pn.pane.Plotly(trendline_fig, sizing_mode="stretch_both")  # Add the trendline chart here
     ))
 )
 
