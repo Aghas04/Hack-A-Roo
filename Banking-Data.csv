@@ -9,7 +9,7 @@ Date,Day,Type,Category,Debit Amount,Credit Amount,Closing Balance
 04/08/2018,Saturday,Debit,Restaurant,110,0,172098.04
 04/08/2018,Saturday,Debit,ATM,10000,0,162098.04
 05/08/2018,Sunday,None,None,0,0,162098.04
-06/08/2018,Monday,Credit,Interest,0,21.62,162119.66
+06/08/2018,Monday,Credit,Interest,0,210.62,162119.66
 06/08/2018,Monday,Debit,Shopping,818,0,161301.66
 07/08/2018,Tuesday,Debit,Shopping,2704.84,0,158596.82
 08/08/2018,Wednesday,None,None,0,0,158596.82
@@ -26,7 +26,7 @@ Date,Day,Type,Category,Debit Amount,Credit Amount,Closing Balance
 12/08/2018,Sunday,Debit,Shopping,1375,0,150540.69
 12/08/2018,Sunday,Debit,Shopping,1024,0,149516.69
 13/08/2018,Monday,Debit,Shopping,50,0,149466.69
-13/08/2018,Monday,Credit,Interest,0,20.29,149486.98
+13/08/2018,Monday,Credit,Interest,0,200.29,149486.98
 14/08/2018,Tuesday,Debit,Medical,1305,0,148181.98
 14/08/2018,Tuesday,Debit,Shopping,931,0,147250.98
 15/08/2018,Wednesday,Debit,ATM,10000,0,137250.98
@@ -37,7 +37,7 @@ Date,Day,Type,Category,Debit Amount,Credit Amount,Closing Balance
 18/08/2018,Saturday,Debit,Shopping,8296,0,103344.46
 18/08/2018,Saturday,Debit,Shopping,11610,0,91734.46
 19/08/2018,Sunday,Debit,Shopping,412,0,91322.46
-20/08/2018,Monday,Credit,Interest,0,21,91343.46
+20/08/2018,Monday,Credit,Interest,0,210,91343.46
 21/08/2018,Tuesday,None,None,0,0,91343.46
 22/08/2018,Wednesday,Debit,ATM,10000,0,81343.46
 23/08/2018,Thursday,Debit,Shopping,18777,0,62566.46
@@ -56,11 +56,11 @@ Date,Day,Type,Category,Debit Amount,Credit Amount,Closing Balance
 27/08/2018,Monday,Debit,Shopping,2949.49,0,35491.97
 28/08/2018,Tuesday,None,None,0,0,35491.97
 29/08/2018,Wednesday,Debit,Shopping,1380,0,34111.97
-30/08/2018,Thursday,Credit,Interest,0,22.12,34134.09
+30/08/2018,Thursday,Credit,Interest,0,220.12,34134.09
 30/08/2018,Thursday,Debit,Shopping,3300,0,30834.09
 31/08/2018,Friday,Debit,Travel,892.5,0,29941.59
 31/08/2018,Friday,Debit,Travel,590,0,29351.59
-31/08/2018,Friday,Credit,Salary,0,250254,279605.59
+31/08/2018,Friday,Credit,Salary,0,150254,279605.59
 31/08/2018,Friday,Debit,Shopping,340,0,279265.59
 01/09/2018,Saturday,Debit,Shopping,200,0,279065.59
 01/09/2018,Saturday,Debit,Entertainment,33.5,0,279032.09
@@ -84,7 +84,7 @@ Date,Day,Type,Category,Debit Amount,Credit Amount,Closing Balance
 15/09/2018,Saturday,Debit,Shopping,5089,0,226530.15
 16/09/2018,Sunday,Debit,Shopping,2569.88,0,223960.27
 17/09/2018,Monday,None,None,0,0,223960.27
-18/09/2018,Tuesday,Credit,Interest,0,19.27,223979.54
+18/09/2018,Tuesday,Credit,Interest,0,190.27,223979.54
 19/09/2018,Wednesday,Debit,ATM,10000,0,213979.54
 20/09/2018,Thursday,Debit,Entertainment,202.19,0,213777.35
 21/09/2018,Friday,None,None,0,0,213777.35
@@ -95,8 +95,8 @@ Date,Day,Type,Category,Debit Amount,Credit Amount,Closing Balance
 26/09/2018,Wednesday,Credit,Interest,0,2250,215027.35
 26/09/2018,Wednesday,Debit,Shopping,3000.65,0,212026.7
 27/09/2018,Thursday,Debit,Entertainment,202.19,0,211824.51
-28/09/2018,Friday,Credit,Interest,0,22.5,211847.01
-28/09/2018,Friday,Credit,Salary,0,250254,462101.01
+28/09/2018,Friday,Credit,Interest,0,220.5,211847.01
+28/09/2018,Friday,Credit,Salary,0,150254,462101.01
 28/09/2018,Friday,Debit,Shopping,1869,0,460232.01
 29/09/2018,Saturday,Debit,Shopping,1180,0,459052.01
 29/09/2018,Saturday,Debit,Shopping,2108,0,456944.01
@@ -110,11 +110,11 @@ Date,Day,Type,Category,Debit Amount,Credit Amount,Closing Balance
 02/10/2018, Tuesday, Debit, Shopping, 567.92, 0, 443548.96
 03/10/2018, Wednesday, Debit, Entertainment, 340.5, 0, 443208.46
 04/10/2018, Thursday, Debit, Medical, 2500, 0, 440708.46
-05/10/2018, Friday, Credit, Interest, 0, 24.75, 440733.21
+05/10/2018, Friday, Credit, Interest, 0, 240.75, 440733.21
 06/10/2018, Saturday, Debit, Shopping, 832.6, 0, 439900.61
 07/10/2018, Sunday, Debit, Restaurant, 510, 0, 439390.61
 08/10/2018, Monday, Debit, Travel, 890, 0, 438500.61
-09/10/2018, Tuesday, Credit, Salary, 0, 250254, 688754.61
+09/10/2018, Tuesday, Credit, Salary, 0, 150254, 688754.61
 10/10/2018, Wednesday, Debit, ATM, 15000, 0, 673754.61
 11/10/2018, Thursday, Debit, Medical, 1200, 0, 672554.61
 12/10/2018, Friday, Debit, Entertainment, 150, 0, 672404.61
@@ -123,13 +123,13 @@ Date,Day,Type,Category,Debit Amount,Credit Amount,Closing Balance
 15/10/2018, Monday, Debit, Restaurant, 600, 0, 668604.61
 16/10/2018, Tuesday, Debit, Entertainment, 430.8, 0, 668173.81
 17/10/2018, Wednesday, Debit, ATM, 10000, 0, 658173.81
-18/10/2018, Thursday, Credit, Interest, 0, 22.5, 658196.31
+18/10/2018, Thursday, Credit, Interest, 0, 220.5, 658196.31
 19/10/2018, Friday, Debit, Shopping, 650, 0, 657546.31
 20/10/2018, Saturday, Debit, Shopping, 742.2, 0, 656804.11
 21/10/2018, Sunday, None, None, 0, 0, 656804.11
 22/10/2018, Monday, Debit, Travel, 1000, 0, 655804.11
 23/10/2018, Tuesday, Debit, Restaurant, 750, 0, 655054.11
-24/10/2018, Wednesday, Credit, Interest, 0, 25.0, 655079.11
+24/10/2018, Wednesday, Credit, Interest, 0, 250.0, 655079.11
 25/10/2018, Thursday, Debit, Shopping, 480.0, 0, 654599.11
 26/10/2018, Friday, Debit, Entertainment, 200.0, 0, 654399.11
 27/10/2018, Saturday, Debit, Travel, 800, 0, 653599.11
@@ -140,12 +140,12 @@ Date,Day,Type,Category,Debit Amount,Credit Amount,Closing Balance
 01/11/2018, Thursday, Debit, Entertainment, 150.0, 0, 647850.11
 02/11/2018, Friday, Debit, Travel, 500, 0, 647350.11
 03/11/2018, Saturday, Debit, Medical, 800, 0, 646550.11
-04/11/2018, Sunday, Credit, Interest, 0, 18.4, 646568.51
+04/11/2018, Sunday, Credit, Interest, 0, 180.4, 646568.51
 05/11/2018, Monday, Debit, Shopping, 1020, 0, 645548.51
 06/11/2018, Tuesday, Debit, Shopping, 1560, 0, 644008.51
 07/11/2018, Wednesday, Debit, Entertainment, 390.5, 0, 643618.01
 08/11/2018, Thursday, Debit, Restaurant, 500, 0, 643118.01
-09/11/2018, Friday, Credit, Salary, 0, 250254, 893372.01
+09/11/2018, Friday, Credit, Salary, 0, 150254, 893372.01
 10/11/2018, Saturday, Debit, ATM, 10000, 0, 883372.01
 11/11/2018, Sunday, Debit, Shopping, 1200, 0, 882172.01
 12/11/2018, Monday, Debit, Shopping, 1800, 0, 880372.01
@@ -154,33 +154,33 @@ Date,Day,Type,Category,Debit Amount,Credit Amount,Closing Balance
 15/11/2018, Thursday, Debit, Restaurant, 300, 0, 878572.01
 16/11/2018, Friday, Debit, Entertainment, 350, 0, 878222.01
 17/11/2018, Saturday, Debit, Shopping, 1500, 0, 876722.01
-18/11/2018, Sunday, Credit, Interest, 0, 15.0, 876737.01
+18/11/2018, Sunday, Credit, Interest, 0, 150.0, 876737.01
 19/11/2018, Monday, Debit, Travel, 1200, 0, 875537.01
 20/11/2018, Tuesday, Debit, Shopping, 950, 0, 874587.01
 21/11/2018, Wednesday, Debit, Entertainment, 250, 0, 874337.01
 22/11/2018, Thursday, Debit, Restaurant, 300, 0, 874037.01
-23/11/2018, Friday, Credit, Interest, 0, 20.0, 874057.01
+23/11/2018, Friday, Credit, Interest, 0, 200.0, 874057.01
 24/11/2018, Saturday, Debit, Travel, 700, 0, 873357.01
 25/11/2018, Sunday, Debit, Shopping, 1200, 0, 872157.01
 26/11/2018, Monday, Debit, ATM, 15000, 0, 857157.01
 27/11/2018, Tuesday, Debit, Shopping, 700, 0, 856457.01
 28/11/2018, Wednesday, Debit, Entertainment, 500, 0, 855957.01
 29/11/2018, Thursday, Debit, Restaurant, 400, 0, 855557.01
-30/11/2018, Friday, Credit, Salary, 0, 250254, 1107811.01
+01/12/2018, Friday, Credit, Salary, 0, 150254, 1107811.01
 01/12/2018, Saturday, Debit, ATM, 12000, 0, 1095811.01
 02/12/2018, Sunday, Debit, Shopping, 3000, 0, 1092811.01
 03/12/2018, Monday, Debit, Shopping, 1200, 0, 1091611.01
 04/12/2018, Tuesday, Debit, Restaurant, 700, 0, 1090911.01
 05/12/2018, Wednesday, Debit, Entertainment, 450, 0, 1090461.01
 06/12/2018, Thursday, Debit, Travel, 800, 0, 1089661.01
-07/12/2018, Friday, Credit, Interest, 0, 23.5, 1089684.51
+07/12/2018, Friday, Credit, Interest, 0, 230.5, 1089684.51
 08/12/2018, Saturday, Debit, Shopping, 1400, 0, 1088284.51
 09/12/2018, Sunday, Debit, Restaurant, 600, 0, 1087684.51
 10/12/2018, Monday, Debit, Medical, 1100, 0, 1086584.51
 11/12/2018, Tuesday, Debit, Entertainment, 200, 0, 1086384.51
 12/12/2018, Wednesday, Debit, Shopping, 800, 0, 1085584.51
 13/12/2018, Thursday, Debit, Travel, 600, 0, 1084984.51
-14/12/2018, Friday, Credit, Interest, 0, 25.0, 1085009.51
+14/12/2018, Friday, Credit, Interest, 0, 250.0, 1085009.51
 15/12/2018, Saturday, Debit, Restaurant, 400, 0, 1084609.51
 16/12/2018, Sunday, Debit, Shopping, 1200, 0, 1083409.51
 17/12/2018, Monday, Debit, ATM, 10000, 0, 1073409.51
@@ -193,18 +193,18 @@ Date,Day,Type,Category,Debit Amount,Credit Amount,Closing Balance
 24/12/2018, Monday, Debit, Shopping, 1300, 0, 1066209.51
 25/12/2018, Tuesday, Debit, Entertainment, 200, 0, 1066009.51
 26/12/2018, Wednesday, Debit, Medical, 1500, 0, 1064509.51
-27/12/2018, Thursday, Credit, Interest, 0, 22.5, 1064532.01
+27/12/2018, Thursday, Credit, Interest, 0, 220.5, 1064532.01
 28/12/2018, Friday, Debit, Restaurant, 300, 0, 1064232.01
 29/12/2018, Saturday, Debit, Shopping, 1000, 0, 1063232.01
 30/12/2018, Sunday, Debit, Entertainment, 400, 0, 1062832.01
 31/12/2018, Monday, Debit, Medical, 1200, 0, 1061632.01
-01/01/2019, Tuesday, Credit, Interest, 0, 20.0, 1061652.01
+01/01/2019, Tuesday, Credit, Interest, 0, 200.0, 1061652.01
 02/01/2019, Wednesday, Debit, Shopping, 800, 0, 1060852.01
 03/01/2019, Thursday, Debit, Entertainment, 300, 0, 1060552.01
 04/01/2019, Friday, Debit, Travel, 1200, 0, 1059352.01
 05/01/2019, Saturday, Debit, Restaurant, 500, 0, 1058852.01
 06/01/2019, Sunday, Debit, Shopping, 1100, 0, 1057752.01
-07/01/2019, Monday, Credit, Salary, 0, 250254, 1308006.01
+07/01/2019, Monday, Credit, Salary, 0, 150254, 1308006.01
 08/01/2019, Tuesday, Debit, Entertainment, 450, 0, 1307556.01
 09/01/2019, Wednesday, Debit, Shopping, 1300, 0, 1306256.01
 10/01/2019, Thursday, Debit, Travel, 700, 0, 1305556.01
