@@ -202,7 +202,7 @@ tabs = pn.Tabs(
     ("Trends", pn.Column(
         pn.pane.Markdown("### Financial Trends Analysis"),
         pn.pane.Markdown("The line graph displays monthly and seasonal financial trends, "
-                         "helping you track fluctuations in income and spending."), trendline_subtabs
+                         "helping you track fluctuations in income and spending.")
     ))
 )
 
