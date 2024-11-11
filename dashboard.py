@@ -62,7 +62,47 @@ def make_income_pie_chart(df):
     )
     
     return pie_fig
+'''
+def spending_trend: 
+    # Load your data into a DataFrame (adjust path as needed)
+    data_path = 'path_to_your_data.csv'  # Replace with your data file
+    df = pd.read_csv(data_path)
+    
+    # Convert Date column to datetime and clean data
+    df['Date'] = pd.to_datetime(df['Date'], format="%d/%m/%Y", errors='coerce')
+    df = df.dropna(subset=['Date'])
 
+
+    latest_date = data['Date'].max()
+    
+    if months:
+        start_date = latest_date - pd.DateOffset(months=months)
+        sub_df = data[data['Date'] > start_date]
+    else:
+        sub_df = data
+
+    # Filter for debit transactions only
+    sub_df = sub_df[(sub_df['Type'] == 'Debit') & (~sub_df['Category'].isin(['Interest', 'Salary']))]
+    
+    # Aggregate spending by month
+    sub_df['Month'] = sub_df['Date'].dt.to_period('M')
+    monthly_totals = sub_df.groupby("Month")["Debit Amount"].sum().reset_index()
+    monthly_totals['Month'] = monthly_totals['Month'].dt.to_timestamp()  # Convert back to timestamp for plotting
+
+    # Generate line chart with trendline
+    fig = px.line(
+        monthly_totals,
+        x="Month",
+        y="Debit Amount",
+        title="Monthly Spending Trend",
+        labels={"Debit Amount": "Spending Amount"}
+    )
+    fig.update_traces(mode="lines+markers")  # Add markers on points for clarity
+    fig.show()
+
+
+
+    '''
 # Function to interact with the LLM model
 def ask_llm(question):
     # Replace this with actual LLM call 
