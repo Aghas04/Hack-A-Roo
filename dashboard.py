@@ -95,7 +95,7 @@ def make_income_pie_chart(df, months=None):
     return pie_fig
 
 
-
+'''
 def make_trendline(df, month=None): 
     df["Total Amount"] = df["Debit Amount"] + df["Credit Amount"]
     
@@ -117,7 +117,7 @@ def make_trendline(df, month=None):
     fig.show()  # Display the figure
     
     return fig  # Return the figure object for further manipulation if needed
-
+'''
 # Load data from CSV file
 df = pd.read_csv('Banking-Data.csv', parse_dates=['Date'])
 
@@ -131,12 +131,12 @@ expense_pie_fig_total = make_expenses_pie_chart(df)  # Total period
 expense_pie_fig_one_month = make_expenses_pie_chart(df, months=1)  # One-month period
 expense_pie_fig_three_months = make_expenses_pie_chart(df, months=3)  # Three-month period
 expense_pie_fig_six_months = make_expenses_pie_chart(df, months=6)  # Six-month period 
-
+'''
 trendline_total = make_trendline(df) 
 trendline_one_month = make_trendline(df, 1) 
 trendline_three_months = make_trendline(df, 3)  
 trendline_six_month = make_trendline(df, 6) 
-
+'''
 # Create the sub-tabs for the "Expense Analysis" tab
 expense_subtabs = pn.Tabs(
     ("Total", pn.pane.Plotly(expense_pie_fig_total, sizing_mode="stretch_both")),
@@ -152,13 +152,14 @@ income_subtabs = pn.Tabs(
     ("Last 3 Months", pn.pane.Plotly(income_pie_fig_three_months, sizing_mode="stretch_both")),
     ("Last 6 Months", pn.pane.Plotly(income_pie_fig_six_months, sizing_mode="stretch_both"))
 )
-
+'''
 trendline_subtabs = pn.Tabs(
     ("Total", pn.pane.Plotly(trendline_total, sizing_mode="stretch_both")),
     ("Last 1 Month", pn.pane.Plotly(trendline_one_month, sizing_mode="stretch_both")),
     ("Last 3 Months", pn.pane.Plotly(trendline_three_months, sizing_mode="stretch_both")),
     ("Last 6 Months", pn.pane.Plotly(trendline_six_months, sizing_mode="stretch_both"))
 )
+'''
 # Panel widgets for question and response
 question_input = pn.widgets.TextInput(name="Ask a Question", placeholder="Type your question here...")
 submit_button = pn.widgets.Button(name="Submit", button_type="primary")
