@@ -1,6 +1,7 @@
 import pandas as pd
 import plotly.express as px
 import panel as pn
+import subprocess
 from privateGPT import get_answer
 # Ensure Panel extensions are loaded
 pn.extension("plotly")
@@ -9,17 +10,26 @@ pn.extension("plotly")
 def make_expenses_pie_chart(df, months=None):
     df['Date'] = pd.to_datetime(df['Date'], format="%d/%m/%Y", errors='coerce')
     df = df.dropna(subset=['Date'])
+
+    df['Type'] = df['Type'].str.strip()
+    df['Category'] = df['Category'].str.strip()
+
     latest_date = df['Date'].max()
     
     if months:
         start_date = latest_date - pd.DateOffset(months=months)
+        
         sub_df = df[df['Date'] > start_date]
+        
     else:
         sub_df = df
     
-    sub_df = sub_df[(sub_df['Type'] == 'Debit') & (~sub_df['Category'].isin(['Interest', 'Salary']))]
-    category_totals = sub_df.groupby("Category")["Debit Amount"].sum().reset_index()
 
+
+    sub_df = sub_df[(sub_df['Type'] == 'Debit') & (~sub_df['Category'].isin(['Interest', 'Salary']))]
+    
+    category_totals = sub_df.groupby("Category")["Debit Amount"].sum().reset_index()
+    
     if category_totals.empty:
         return px.scatter(title="No data available for selected period")
 
@@ -40,21 +50,43 @@ def make_expenses_pie_chart(df, months=None):
     return pie_fig
 
 
-def make_income_pie_chart(df):
-    sub_df = df[(df['Type'] == 'Credit') & (df['Category'].isin(['Interest', 'Salary']))]
+# Function to create the income pie chart for a specific time period
+def make_income_pie_chart(df, months=None):
+    # Clean the 'Type' and 'Category' columns by removing leading/trailing spaces
+    df['Date'] = pd.to_datetime(df['Date'], format="%d/%m/%Y", errors='coerce')
+    df['Type'] = df['Type'].str.strip()
+    df['Category'] = df['Category'].str.strip()
+
+    latest_date = df['Date'].max()
+    
+    if months:
+        start_date = latest_date - pd.DateOffset(months=months)
+        
+        sub_df = df[df['Date'] > start_date]
+        
+    else:
+        sub_df = df
+
+    # Filter for 'Credit' transactions and 'Interest' or 'Salary' categories
+    sub_df = sub_df[(sub_df['Type'] == 'Credit') & (sub_df['Category'].isin(['Interest', 'Salary']))]
+
+    # Group by Category and sum the Credit Amount
     category_totals = sub_df.groupby("Category")["Credit Amount"].sum().reset_index()
 
+    # If there is no data after filtering, return a message
     if category_totals.empty:
         return px.scatter(title="No data available for income")
 
+    # Create the pie chart for income breakdown
     pie_fig = px.pie(
         category_totals,
         values="Credit Amount",
         names="Category",
-        title="Income Breakdown by Category",
+        title=f"Income Breakdown by Category ({'Total' if not months else f'Last {months} Month' + ('s' if months > 1 else '')})",
         color_discrete_sequence=px.colors.qualitative.Set1,
     )
 
+    # Update the pie chart for better visualization
     pie_fig.update_traces(
         textposition='inside', 
         textinfo="percent+label",
@@ -67,13 +99,17 @@ def make_income_pie_chart(df):
 def ask_llm(question):
     # Replace this with actual LLM call 
     answer = get_answer(question)
-    return "ChatBot: " + answer
+    return answer
 
 # Load data from CSV file
 df = pd.read_csv('Banking-Data.csv', parse_dates=['Date'])
 
-# Create the pie charts for each period
-income_pie_fig = make_income_pie_chart(df)
+# Create the pie charts for each period for both income and expenses
+income_pie_fig_total = make_income_pie_chart(df)  # Total period
+income_pie_fig_one_month = make_income_pie_chart(df, months=1)  # One-month period
+income_pie_fig_three_months = make_income_pie_chart(df, months=3)  # Three-month period
+income_pie_fig_six_months = make_income_pie_chart(df, months=6)  # Six-month period
+
 expense_pie_fig_total = make_expenses_pie_chart(df)  # Total period
 expense_pie_fig_one_month = make_expenses_pie_chart(df, months=1)  # One-month period
 expense_pie_fig_three_months = make_expenses_pie_chart(df, months=3)  # Three-month period
@@ -85,6 +121,14 @@ expense_subtabs = pn.Tabs(
     ("Last 1 Month", pn.pane.Plotly(expense_pie_fig_one_month, sizing_mode="stretch_both")),
     ("Last 3 Months", pn.pane.Plotly(expense_pie_fig_three_months, sizing_mode="stretch_both")),
     ("Last 6 Months", pn.pane.Plotly(expense_pie_fig_six_months, sizing_mode="stretch_both"))
+)
+
+# Create the sub-tabs for the "Income Analysis" tab
+income_subtabs = pn.Tabs(
+    ("Total", pn.pane.Plotly(income_pie_fig_total, sizing_mode="stretch_both")),
+    ("Last 1 Month", pn.pane.Plotly(income_pie_fig_one_month, sizing_mode="stretch_both")),
+    ("Last 3 Months", pn.pane.Plotly(income_pie_fig_three_months, sizing_mode="stretch_both")),
+    ("Last 6 Months", pn.pane.Plotly(income_pie_fig_six_months, sizing_mode="stretch_both"))
 )
 
 # Panel widgets for question and response
@@ -99,6 +143,29 @@ def on_submit(event):
     response_area.object = f"**Response:** {response}"
 
 submit_button.on_click(on_submit)
+
+#load data from csv file
+def run_private_gpt():
+    try:
+        # Run privateGPT.py as a separate process
+        process = subprocess.Popen(['python', 'privateGPT.py'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+        # Print output and error in real-time
+        for line in process.stdout:
+            print(line.decode(), end='')
+
+        # Check for errors after process completes
+        stdout, stderr = process.communicate()
+        if stderr:
+            print("Error:", stderr.decode())
+
+    except Exception as e:
+        print(f"An error occurred: {e}")
+
+if __name__ == "__main__":
+    print("Starting privateGPT from dashboard...")
+    run_private_gpt()
+    
 
 # Define the dashboard tabs with detailed descriptions
 tabs = pn.Tabs(
@@ -118,7 +185,7 @@ tabs = pn.Tabs(
         pn.pane.Markdown("### Income Breakdown"),
         pn.pane.Markdown("The pie chart below provides a breakdown of your income sources, helping you "
                          "identify the contributions of different income streams, like salary and interest."),
-        pn.pane.Plotly(income_pie_fig, sizing_mode="stretch_both")
+        income_subtabs  # Add income subtabs for different periods
     )),
     ("Expense Analysis", pn.Column(
         pn.pane.Markdown("### Expense Breakdown"),
@@ -135,7 +202,7 @@ tabs = pn.Tabs(
 
 # Define the dashboard template with improved sidebar and header
 template = pn.template.FastListTemplate(
-    title="Personal Finance Dashboard",
+    title="Summit Finance Analytics",
     sidebar=[
         pn.pane.Markdown("# Personal Finance Insights"),
         pn.pane.Markdown("Welcome to your personal finance dashboard. Get an overview of your income and expenses, "
@@ -144,7 +211,7 @@ template = pn.template.FastListTemplate(
         pn.pane.Markdown("### Navigation Guide"),
         pn.pane.Markdown("Use the tabs on the main screen to explore detailed views of your **Income Analysis**, "
                          "**Expense Analysis**, and **Trends**."),
-        pn.pane.PNG("picture.png", sizing_mode="scale_both")
+        pn.pane.PNG("logo.png", sizing_mode="scale_both")
     ],
     main=[
         pn.Row(tabs, sizing_mode="stretch_both")
@@ -153,5 +220,6 @@ template = pn.template.FastListTemplate(
     header_background="#000000",
 )
 
+run_private_gpt()
 # Display the dashboard
 template.show()
